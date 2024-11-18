@@ -5,6 +5,7 @@ def __connection() -> sqlite3.Connection:
         conn = sqlite3.connect("sample_database.db")
         return conn
     except Exception as ex:
+        print(ex)
         raise Exception("No se pudo conectar a la base de datos")
     
 def __dict_factory(cursor, row):
@@ -18,16 +19,20 @@ def test_connection() -> None:
     except Exception as ex:
         print(ex)
 
-def select(query: str) -> list[any]:
+def select(query: str, params: tuple = ()) -> list[any]:
     try:
         data = []
         with __connection() as conn:
             conn.row_factory = __dict_factory
             cur = conn.cursor()
-            cur.execute(query)
+            cur.execute(query, params)
             data = [d for d in cur.fetchall()]
             cur.close()
 
         return data
+    except sqlite3.ProgrammingError as pe:
+        print(pe)
+        raise Exception("Error al obtener datos, es probable que las condiciones no se cumplan completamente")
     except Exception as ex:
+        print(ex)
         raise Exception("Error al obtener datos")
