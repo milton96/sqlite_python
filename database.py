@@ -78,3 +78,17 @@ def update(query: str, params: tuple, updated_row: bool = False) -> dict | None:
     except Exception as ex:
         print(ex)
         raise Exception("Ocurrio un error desconocido al actualizar los datos")
+    
+def delete(query: str, id: any) -> None:
+    try:
+        with __connection() as conn:
+            cur = conn.cursor()
+            cur.execute(query, (id,))
+
+            cur.close()
+    except sqlite3.ProgrammingError as pe:
+        print(pe)
+        raise Exception("Error al eliminar el dato")
+    except Exception as ex:
+        print(ex)
+        raise Exception("Ocurrio un error desconocido al eliminar el dato")
