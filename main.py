@@ -1,15 +1,12 @@
 from flask import Flask
-from flask_restful import Resource, Api
-
-class HelloWolrd(Resource):
-    def get(self):
-        return {'hello': 'world!'}
+from flask_restful import Api
+from resources.usuarioResource import UsuariosResource
 
 def main():
     app = Flask(__name__)
     api = Api(app)
 
-    api.add_resource(HelloWolrd, '/')
+    api.add_resource(UsuariosResource, '/usuarios')
 
     app.run(debug=True)
 
