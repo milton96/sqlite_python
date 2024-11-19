@@ -36,3 +36,24 @@ def select(query: str, params: tuple = ()) -> list[any]:
     except Exception as ex:
         print(ex)
         raise Exception("Error al obtener datos")
+    
+def insert(query: str, params: tuple, last_id: str = None) -> int | str | None:
+    try:
+        id = None
+        with __connection() as conn:
+            conn.row_factory = __dict_factory
+            cur = conn.cursor()
+            cur.execute(query, params)
+            
+            if last_id is not None:
+                id = cur.fetchone()[last_id]
+
+            cur.close()
+
+        return id
+    except sqlite3.ProgrammingError as pe:
+        print(pe)
+        raise Exception("Error al insertar los datos")
+    except Exception as ex:
+        print(ex)
+        raise Exception("Ocurrio un error desconocido al insertar los datos")
