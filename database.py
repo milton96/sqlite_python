@@ -57,3 +57,18 @@ def insert(query: str, params: tuple, last_id: str = None) -> int | str | None:
     except Exception as ex:
         print(ex)
         raise Exception("Ocurrio un error desconocido al insertar los datos")
+    
+def update(query: str, params: tuple) -> None:
+    try:
+        with __connection() as conn:
+            conn.row_factory = __dict_factory
+            cur = conn.cursor()
+            cur.execute(query, params)
+
+            cur.close()
+    except sqlite3.ProgrammingError as pe:
+        print(pe)
+        raise Exception("Error al actualizar los datos")
+    except Exception as ex:
+        print(ex)
+        raise Exception("Ocurrio un error desconocido al actualizar los datos")
