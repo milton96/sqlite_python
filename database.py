@@ -54,6 +54,9 @@ def insert(query: str, params: tuple, last_id: str = None) -> int | str | None:
     except sqlite3.ProgrammingError as pe:
         print(pe)
         raise Exception("Error al insertar los datos")
+    except sqlite3.IntegrityError as ie:
+        print(ie)
+        raise Exception("Error al insertar datos, probable valor duplicado no permitido")
     except Exception as ex:
         print(ex)
         raise Exception("Ocurrio un error desconocido al insertar los datos")
