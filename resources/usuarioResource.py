@@ -14,7 +14,9 @@ class UsuarioResource(Resource):
     def get(self, id):
         try:
             usuario = userSrv.obtener(id)
-            return usuario or {}, 200
+            if usuario is None:
+                return "", 204
+            return usuario, 200
         except Exception as ex:
             abort(400, description="Ocurrio un error inesperado")
 
