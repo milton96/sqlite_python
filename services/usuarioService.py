@@ -1,4 +1,4 @@
-from database import select
+import database
 
 def lista() -> list[any]:
     try:
@@ -16,8 +16,31 @@ def lista() -> list[any]:
             ORDER BY nombre ASC;
         """
 
-        usuarios = select(query)
+        usuarios = database.select(query)
         return usuarios
     except Exception as ex:
         print(ex)
         raise Exception("Error al obtener la lista de usuarios")
+    
+def obtener(id: int) -> any:
+    try:
+        query = """
+            SELECT
+                id,
+                usuario,
+                nombre,
+                apellido,
+                edad,
+                STRFTIME('%Y-%m-%dT%H:%M:%S',fecha_alta) AS fecha_alta,
+                activo
+            FROM
+                usuarios
+            WHERE id = ?;
+        """
+        usuario = database.select(query, (id,))
+        if len(usuario) == 0:
+            return None
+        return usuario
+    except Exception as ex:
+        print(ex)
+        raise Exception("Error al obtener el usuario")
