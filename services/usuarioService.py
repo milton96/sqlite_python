@@ -44,3 +44,16 @@ def obtener(id: int) -> any:
     except Exception as ex:
         print(ex)
         raise Exception("Error al obtener el usuario")
+    
+def cambiar_activo(id: int, activo: int) -> None:
+    try:
+        query = """
+            UPDATE usuarios
+            SET
+                activo = ?
+            WHERE id = ?;
+        """
+        database.update(query, (activo, id,))
+    except Exception as ex:
+        print(ex)
+        raise Exception("Error al cambiar el estado activo del usuario")
