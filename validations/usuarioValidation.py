@@ -1,5 +1,7 @@
 from pydantic import ValidationError
 from models.usuarioModel import UsuarioNuevo
+from utils.common import validate_error
+from utils.customException import ExceptionControlada
 
 def nuevo_usuario(body):
     try:
@@ -7,7 +9,6 @@ def nuevo_usuario(body):
 
         return u.model_dump()
     except ValidationError as ve:
-        detail = ve.errors()[0]
-        print(detail["ctx"]["error"])
+        validate_error(ve)
     except Exception as ex:
         print(ex)
