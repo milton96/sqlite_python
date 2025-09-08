@@ -1,6 +1,6 @@
 import database
 
-def lista() -> list[any]:
+def lista() -> list[dict[str, str | int]]:
     try:
         query = """
             SELECT
@@ -22,7 +22,7 @@ def lista() -> list[any]:
         print(ex)
         raise Exception("Error al obtener la lista de usuarios")
     
-def obtener(id: int) -> any:
+def obtener(id: int) -> dict | None:
     try:
         query = """
             SELECT
@@ -40,7 +40,7 @@ def obtener(id: int) -> any:
         usuario = database.select(query, (id,))
         if len(usuario) == 0:
             return None
-        return usuario
+        return usuario[0]
     except Exception as ex:
         print(ex)
         raise Exception("Error al obtener el usuario")
