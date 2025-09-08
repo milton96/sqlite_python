@@ -19,7 +19,7 @@ def test_connection() -> None:
     except Exception as ex:
         print(ex)
 
-def select(query: str, params: tuple = ()) -> list[any]:
+def select(query: str, params: tuple = ()) -> list[dict[str, str | int]]:
     try:
         data = []
         with __connection() as conn:
@@ -37,7 +37,7 @@ def select(query: str, params: tuple = ()) -> list[any]:
         print(ex)
         raise Exception("Error al obtener datos")
     
-def insert(query: str, params: tuple, last_id: str = None) -> int | str | None:
+def insert(query: str, params: tuple, last_id: str | None = None) -> int | str | None:
     try:
         id = None
         with __connection() as conn:
@@ -82,7 +82,7 @@ def update(query: str, params: tuple, updated_row: bool = False) -> dict | None:
         print(ex)
         raise Exception("Ocurrio un error desconocido al actualizar los datos")
     
-def delete(query: str, id: any) -> None:
+def delete(query: str, id: int) -> None:
     try:
         with __connection() as conn:
             cur = conn.cursor()
