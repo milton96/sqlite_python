@@ -1,36 +1,43 @@
+from typing import Optional
 from pydantic import BaseModel, field_validator
 
+from utils.common import to_sha256
+
 class UsuarioNuevo(BaseModel):
-    usuario: str | None = None
-    password: str | None = None
-    nombre: str
-    apellido: str | None = None
-    edad: int | None = None
-    activo: int = 1
+    usuario: Optional[str]
+    password: Optional[str]
+    nombre: Optional[str]
+    apellido: Optional[str] = None
+    edad: Optional[int] = None
+    activo: Optional[int] = 1
 
     @field_validator("usuario")
-    def usuario_field(cls, v):
-        print(v)
+    def usuario_field(cls, v: str):
+        if v is None or v.strip() == "":
+            raise ValueError("El usuario es requerido")
         return v
     
     @field_validator("password")
-    def password_field(cls, v):
-        print(v)
-        return v
+    def password_field(cls, v: str):
+        if v is None or v.strip() == "":
+            raise ValueError("La contrasenia es requerida")
+        return to_sha256(v)
     
     @field_validator("nombre")
-    def nombre_field(cls, v):
-        print(v)
+    def nombre_field(cls, v: str):
+        if v is None or v.strip() == "":
+            raise ValueError("El nombre es requerido")
         return v
     
     @field_validator("apellido")
-    def apellido_field(cls, v):
-        print(v)
+    def apellido_field(cls, v: str):
+        if v is None or v.strip() == "":
+            return None
         return v
     
     @field_validator("edad")
     def edad_field(cls, v: int):
-        if v < 18:
+        if v is not None and v < 18:
             raise ValueError("Debe ser mayor de edad")
         return v
     

@@ -19,7 +19,6 @@ def lista() -> list[dict[str, str | int]]:
         usuarios = database.select(query)
         return usuarios
     except Exception as ex:
-        print(ex)
         raise Exception("Error al obtener la lista de usuarios")
     
 def obtener(id: int) -> dict | None:
@@ -42,7 +41,6 @@ def obtener(id: int) -> dict | None:
             return None
         return usuario[0]
     except Exception as ex:
-        print(ex)
         raise Exception("Error al obtener el usuario")
     
 def cambiar_activo(id: int, activo: int) -> None:
@@ -55,5 +53,4 @@ def cambiar_activo(id: int, activo: int) -> None:
         """
         database.update(query, (activo, id,))
     except Exception as ex:
-        print(ex)
         raise Exception("Error al cambiar el estado activo del usuario")
