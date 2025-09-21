@@ -9,8 +9,8 @@ def nuevo_usuario(body):
 
         return u.model_dump()
     except ValidationError as ve:
-        validate_error(ve)
+        raise validate_error(ve)
     except ExceptionControlada as ec:
         raise ExceptionControlada(ec.codigo, ec.message)
     except Exception as ex:
-        print(ex)
+        raise ExceptionControlada(400, "Error desconocido al validar al nuevo usuario")

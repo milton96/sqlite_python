@@ -1,11 +1,12 @@
 import sqlite3
 
+from utils.customException import ExceptionControlada
+
 def __connection() -> sqlite3.Connection:
     try:
         conn = sqlite3.connect("sample_database.db")
         return conn
     except Exception as ex:
-        print(ex)
         raise Exception("No se pudo conectar a la base de datos")
     
 def __dict_factory(cursor, row):
@@ -31,10 +32,8 @@ def select(query: str, params: tuple = ()) -> list[dict[str, str | int]]:
 
         return data
     except sqlite3.ProgrammingError as pe:
-        print(pe)
         raise Exception("Error al obtener datos, es probable que las condiciones no se cumplan completamente")
     except Exception as ex:
-        print(ex)
         raise Exception("Error al obtener datos")
     
 def insert(query: str, params: tuple, last_id: str | None = None) -> int | str | None:
@@ -52,14 +51,11 @@ def insert(query: str, params: tuple, last_id: str | None = None) -> int | str |
 
         return id
     except sqlite3.ProgrammingError as pe:
-        print(pe)
-        raise Exception("Error al insertar los datos")
+        raise ExceptionControlada(500, "Error al insertar los datos")
     except sqlite3.IntegrityError as ie:
-        print(ie)
-        raise Exception("Error al insertar datos, probable valor duplicado no permitido")
+        raise ExceptionControlada(409, "Error al insertar datos, probable valor duplicado no permitido")
     except Exception as ex:
-        print(ex)
-        raise Exception("Ocurrio un error desconocido al insertar los datos")
+        raise ExceptionControlada(500, "Ocurrio un error desconocido al insertar los datos")
 
 def update(query: str, params: tuple, updated_row: bool = False) -> dict | None:
     try:
@@ -76,10 +72,8 @@ def update(query: str, params: tuple, updated_row: bool = False) -> dict | None:
 
         return updated
     except sqlite3.ProgrammingError as pe:
-        print(pe)
         raise Exception("Error al actualizar los datos")
     except Exception as ex:
-        print(ex)
         raise Exception("Ocurrio un error desconocido al actualizar los datos")
     
 def delete(query: str, id: int) -> None:
@@ -90,8 +84,6 @@ def delete(query: str, id: int) -> None:
 
             cur.close()
     except sqlite3.ProgrammingError as pe:
-        print(pe)
         raise Exception("Error al eliminar el dato")
     except Exception as ex:
-        print(ex)
         raise Exception("Ocurrio un error desconocido al eliminar el dato")

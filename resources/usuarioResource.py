@@ -23,7 +23,11 @@ class UsuariosResource(Resource):
 
             body["activo"] = 1
             u = nuevo_usuario(body)
-            return u, 201
+            if u is None:
+                raise ExceptionControlada(400, "Ocurrio un error al crear el nuevo usuario")
+
+            id = userSrv.crear(u)
+            return {"id": id}, 201
         except ExceptionControlada as ec:
             abort(ec.codigo, description=ec.message)
         except Exception as ex:

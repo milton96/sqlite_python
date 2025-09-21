@@ -1,4 +1,5 @@
 import database
+from utils.customException import ExceptionControlada
 
 def lista() -> list[dict[str, str | int]]:
     try:
@@ -54,3 +55,27 @@ def cambiar_activo(id: int, activo: int) -> None:
         database.update(query, (activo, id,))
     except Exception as ex:
         raise Exception("Error al cambiar el estado activo del usuario")
+    
+def crear(usuario: dict[str, str | int]):
+    try:
+        query = """
+            INSERT INTO usuarios
+                (usuario, password, nombre, apellido, edad, activo)
+            VALUES
+                (?, ?, UPPER(?), UPPER(?), ?, ?)
+            RETURNING id;
+        """
+        data = (
+            usuario.get("usuario"),
+            usuario.get("password"),
+            usuario.get("nombre"),
+            usuario.get("apellido"),
+            usuario.get("edad"),
+            usuario.get("activo")
+        )
+        id = database.insert(query, data, "id")
+        return id
+    except ExceptionControlada as ec:
+        raise ExceptionControlada(ec.codigo, ec.message)
+    except Exception as ex:
+        raise Exception("Error desconocido al crear el usuario")
