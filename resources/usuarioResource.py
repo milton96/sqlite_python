@@ -17,7 +17,6 @@ class UsuariosResource(Resource):
 
     def post(self):
         try:
-            # body = request.json
             body = get_body(request)
             if body is None or len(body.keys()) == 0:
                 raise ExceptionControlada(400, "No se recibio informacion")

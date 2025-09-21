@@ -1,4 +1,5 @@
 from hashlib import sha256
+import re
 from flask import Request, json
 from pydantic import ValidationError
 from utils.customException import ExceptionControlada
@@ -29,3 +30,10 @@ def validate_error(ve: ValidationError):
         raise ExceptionControlada(ec.codigo, ec.message)
     except Exception as ex:
         raise ExceptionControlada(500, "Ocurrio un error desconocido en las validaciones")
+
+def validate_regex(value: str, regex: re.Pattern[str] | str) -> bool:
+    try:
+        match = re.match(regex, value)
+        return True if match is not None else False
+    except Exception as ex:
+        return False
